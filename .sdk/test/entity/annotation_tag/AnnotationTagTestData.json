@@ -1,0 +1,154 @@
+{
+  "existing": {
+    "annotation_tag": {
+      "ANNOTATION_TAG00": {
+        "has_annotations": true,
+        "id": "ANNOTATION_TAG00",
+        "name": "s2a",
+        "project_id": "PROJECT01"
+      },
+      "ANNOTATION_TAG01": {
+        "has_annotations": true,
+        "id": "ANNOTATION_TAG01",
+        "name": "s52",
+        "project_id": "PROJECT01"
+      },
+      "ANNOTATION_TAG02": {
+        "has_annotations": true,
+        "id": "ANNOTATION_TAG02",
+        "name": "s7a",
+        "project_id": "PROJECT01"
+      }
+    }
+  },
+  "new": {
+    "annotation_tag": {
+      "annotation_tag_ref01": {
+        "has_annotations": true,
+        "name": "sa2",
+        "project_id": "PROJECT01"
+      }
+    }
+  },
+  "requests": {
+    "GET /projects/{projectId}/annotations/tags": {
+      "provenance": "operation-contract",
+      "contract": {
+        "operationId": "get-annotation-tags",
+        "parameters": [
+          {
+            "description": "Your project id (eg: 12345)",
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "protocol": "http",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "The list of annotation tags that have been created",
+                  "items": {
+                    "description": "An annotation tag",
+                    "properties": {
+                      "has_annotations": {
+                        "description": "whether the tag is currently attached to any annotations",
+                        "type": "boolean"
+                      },
+                      "id": {
+                        "type": "number"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "project_id": {
+                        "type": "number"
+                      }
+                    },
+                    "title": "AnnotationTag",
+                    "type": "object"
+                  },
+                  "title": "GetAnnotationTagsResponse",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "description": "Details about the error that occurred",
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "error"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "description": "Details about the error that occurred",
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "error"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "ServiceAccount": []
+          }
+        ],
+        "securitySchemes": {
+          "OAuthToken": {
+            "description": "OAuth Token",
+            "scheme": "bearer",
+            "type": "http"
+          },
+          "ProjectSecret": {
+            "description": "Project Secret",
+            "scheme": "basic",
+            "type": "http"
+          },
+          "ServiceAccount": {
+            "description": "Service Account",
+            "scheme": "basic",
+            "type": "http"
+          }
+        },
+        "securitySource": "definition"
+      }
+    }
+  }
+}

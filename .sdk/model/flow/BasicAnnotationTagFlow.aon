@@ -1,0 +1,26 @@
+# BasicAnnotationTagFlow
+
+main: kit: flow: BasicAnnotationTagFlow:
+{
+  entity: "annotation_tag",
+  kind: "basic",
+  name: "BasicAnnotationTagFlow",
+  step: [
+    {
+      match: {
+        project_id: "project01"
+      }
+
+      op: "list",
+      valid: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "annotation_tag_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicAnnotationTagFlow"
+}

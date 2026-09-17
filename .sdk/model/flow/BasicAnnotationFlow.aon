@@ -1,0 +1,82 @@
+# BasicAnnotationFlow
+
+main: kit: flow: BasicAnnotationFlow:
+{
+  entity: "annotation",
+  kind: "basic",
+  name: "BasicAnnotationFlow",
+  step: [
+    {
+      input: {
+        ref: "annotation_ref01"
+      }
+
+      match: {
+        project_id: "project01"
+      }
+
+      op: "create"
+    }
+
+    {
+      data: {
+        project_id: "project01"
+      }
+
+      input: {
+        ref: "annotation_ref01",
+        srcdatavar: "annotation_ref01_data",
+        suffix: "_up0",
+        textfield: "date"
+      }
+
+      op: "update",
+      spec: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-annotation_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "annotation_ref01",
+        srcdatavar: "annotation_ref01_data",
+        suffix: "_dt0"
+      }
+
+      match: {
+        id: "annotation01",
+        project_id: "project01"
+      }
+
+      op: "load",
+      valid: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-annotation_ref01"
+          }
+        }
+      ]
+    }
+
+    {
+      input: {
+        ref: "annotation_ref01",
+        suffix: "_rm0"
+      }
+
+      match: {
+        id: "annotation01",
+        project_id: "project01"
+      }
+
+      op: "remove"
+    }
+  ],
+  "key$": "BasicAnnotationFlow"
+}

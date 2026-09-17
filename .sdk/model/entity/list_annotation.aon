@@ -1,0 +1,126 @@
+# Entity: list_annotation
+
+main: kit: entity: list_annotation: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "date"
+      req: false
+      short: "A string representation of a date in \"YYYY-MM-DD HH:mm:ss\" format"
+      type: "`$STRING`"
+    }
+    {
+      name: "description"
+      req: false
+      short: "The text that will be shown when looking at the annotation"
+      type: "`$STRING`"
+    }
+    {
+      name: "id"
+      req: false
+      type: "`$NUMBER`"
+    }
+    {
+      name: "tags"
+      req: false
+      type: "`$ARRAY`"
+    }
+    {
+      name: "user"
+      req: false
+      short: "Info about the creator of the annotation"
+      type: "`$OBJECT`"
+    }
+  ]
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "list_annotation"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "project_id"
+                orig: "project_id"
+                reqd: true
+                type: "`$INTEGER`"
+              }
+            ]
+            query: [
+              {
+                kind: "query"
+                name: "from_date"
+                orig: "from_date"
+                reqd: false
+                type: "`$STRING`"
+              }
+              {
+                kind: "query"
+                name: "to_date"
+                orig: "to_date"
+                reqd: false
+                type: "`$STRING`"
+              }
+            ]
+          }
+          contract: {
+            id: "GET /projects/{projectId}/annotations"
+            json: "{\"operationId\":\"list-all-annotations-for-project\",\"parameters\":[{\"description\":\"Your project id (eg: 12345)\",\"in\":\"path\",\"name\":\"projectId\",\"required\":true,\"schema\":{\"type\":\"integer\"}},{\"description\":\"The date in yyyy-mm-dd format to begin querying from. This date is inclusive.\",\"in\":\"query\",\"name\":\"fromDate\",\"required\":false,\"schema\":{\"type\":\"string\"}},{\"description\":\"The date in yyyy-mm-dd format to query to. This date is inclusive.\",\"in\":\"query\",\"name\":\"toDate\",\"required\":false,\"schema\":{\"type\":\"string\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":false,\"description\":\"A JSON response object containing all annotations in the project'\",\"properties\":{\"results\":{\"items\":{\"additionalProperties\":false,\"description\":\"Representation of a single annotation\",\"properties\":{\"date\":{\"description\":\"A string representation of a date in \\\"YYYY-MM-DD HH:mm:ss\\\" format\",\"example\":\"2022-02-15 12:00:00\",\"type\":\"string\"},\"description\":{\"description\":\"The text that will be shown when looking at the annotation\",\"example\":\"Something interesting happened!\",\"type\":\"string\"},\"id\":{\"type\":\"number\"},\"tags\":{\"items\":{\"description\":\"Basic info about an Annotation Tag\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\"}},\"title\":\"SimpleTag\",\"type\":\"object\"},\"type\":\"array\"},\"user\":{\"description\":\"Info about the creator of the annotation\",\"properties\":{\"first_name\":{\"example\":\"John\",\"type\":\"string\"},\"id\":{\"type\":\"number\"},\"last_name\":{\"example\":\"Smith\",\"type\":\"string\"}},\"title\":\"UserInfo\",\"type\":\"object\"}},\"title\":\"AnnotationsEntry\",\"type\":\"object\"},\"type\":\"array\"},\"status\":{\"description\":\"The status of the response\",\"example\":\"ok\",\"type\":\"string\"}},\"required\":[\"status\",\"results\"],\"title\":\"ListAnnotationsResponse\",\"type\":\"object\"}}},\"description\":\"Success\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"Details about the error that occurred\",\"type\":\"string\"},\"status\":{\"enum\":[\"error\"],\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized\"},\"403\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"Details about the error that occurred\",\"type\":\"string\"},\"status\":{\"enum\":[\"error\"],\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Forbidden\"}},\"security\":[{\"ServiceAccount\":[]}],\"securitySchemes\":{\"OAuthToken\":{\"description\":\"OAuth Token\",\"scheme\":\"bearer\",\"type\":\"http\"},\"ProjectSecret\":{\"description\":\"Project Secret\",\"scheme\":\"basic\",\"type\":\"http\"},\"ServiceAccount\":{\"description\":\"Service Account\",\"scheme\":\"basic\",\"type\":\"http\"}},\"securitySource\":\"definition\"}"
+            source: "openapi3"
+            version: 1
+          }
+          method: "GET"
+          orig: "/projects/{projectId}/annotations"
+          rename: {
+            param: {
+              projectId: "project_id"
+            }
+          }
+          segments: [
+            {
+              lit: "projects"
+            }
+            {
+              var: "project_id"
+            }
+            {
+              lit: "annotations"
+            }
+          ]
+          select: {
+            exist: [
+              "from_date"
+              "project_id"
+              "to_date"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.results`"
+          }
+        }
+      ]
+    }
+  }
+
+  relations: {
+    ancestors: [
+      [
+        "project"
+      ]
+    ]
+  }
+
+
+
+}

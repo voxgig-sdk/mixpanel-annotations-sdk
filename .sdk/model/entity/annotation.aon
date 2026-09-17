@@ -1,0 +1,298 @@
+# Entity: annotation
+
+main: kit: entity: annotation: {
+
+  alias: field: {}
+
+  fields: [
+    {
+      name: "date"
+      req: false
+      short: "A string representation of a date in \"YYYY-MM-DD HH:mm:ss\" format"
+      type: "`$STRING`"
+    }
+    {
+      name: "description"
+      req: false
+      short: "The text that will be shown when looking at the annotation"
+      type: "`$STRING`"
+    }
+    {
+      name: "id"
+      req: false
+      type: "`$NUMBER`"
+    }
+    {
+      name: "tags"
+      req: false
+      short: "The ids of the tags to be added to the annotation"
+      type: "`$ARRAY`"
+    }
+    {
+      name: "user"
+      req: false
+      short: "Info about the creator of the annotation"
+      type: "`$OBJECT`"
+    }
+  ]
+
+  id: {
+    field: "id"
+    name: "id"
+  }
+
+  name: "annotation"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "project_id"
+                orig: "project_id"
+                reqd: true
+                type: "`$INTEGER`"
+              }
+            ]
+          }
+          contract: {
+            id: "POST /projects/{projectId}/annotations"
+            json: "{\"operationId\":\"create-annotation\",\"parameters\":[{\"description\":\"Your project id (eg: 12345)\",\"in\":\"path\",\"name\":\"projectId\",\"required\":true,\"schema\":{\"type\":\"integer\"}}],\"protocol\":\"http\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"date\":{\"description\":\"A string representation of a date in \\\"YYYY-MM-DD HH:mm:ss\\\" format\",\"example\":\"2022-02-15 12:00:00\",\"type\":\"string\"},\"description\":{\"description\":\"The text that will be shown when looking at the annotation\",\"example\":\"Something interesting happened!\",\"type\":\"string\"},\"tags\":{\"description\":\"The ids of the tags to be added to the annotation\",\"items\":{\"type\":\"number\"},\"title\":\"TagIds\",\"type\":\"array\"}}}}},\"required\":true},\"responses\":{\"201\":{\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":false,\"description\":\"A JSON response object containing an annotation'\",\"properties\":{\"results\":{\"additionalProperties\":false,\"description\":\"Representation of a single annotation\",\"properties\":{\"date\":{\"description\":\"A string representation of a date in \\\"YYYY-MM-DD HH:mm:ss\\\" format\",\"example\":\"2022-02-15 12:00:00\",\"type\":\"string\"},\"description\":{\"description\":\"The text that will be shown when looking at the annotation\",\"example\":\"Something interesting happened!\",\"type\":\"string\"},\"id\":{\"type\":\"number\"},\"tags\":{\"items\":{\"description\":\"Basic info about an Annotation Tag\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\"}},\"title\":\"SimpleTag\",\"type\":\"object\"},\"type\":\"array\"},\"user\":{\"description\":\"Info about the creator of the annotation\",\"properties\":{\"first_name\":{\"example\":\"John\",\"type\":\"string\"},\"id\":{\"type\":\"number\"},\"last_name\":{\"example\":\"Smith\",\"type\":\"string\"}},\"title\":\"UserInfo\",\"type\":\"object\"}},\"title\":\"AnnotationsEntry\",\"type\":\"object\"},\"status\":{\"description\":\"The status of the response\",\"example\":\"ok\",\"type\":\"string\"}},\"required\":[\"status\",\"results\"],\"title\":\"GetAnnotationsResponse\",\"type\":\"object\"}}},\"description\":\"Success\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"Details about the error that occurred\",\"type\":\"string\"},\"status\":{\"enum\":[\"error\"],\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized\"},\"403\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"Details about the error that occurred\",\"type\":\"string\"},\"status\":{\"enum\":[\"error\"],\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Forbidden\"}},\"security\":[{\"ServiceAccount\":[]}],\"securitySchemes\":{\"OAuthToken\":{\"description\":\"OAuth Token\",\"scheme\":\"bearer\",\"type\":\"http\"},\"ProjectSecret\":{\"description\":\"Project Secret\",\"scheme\":\"basic\",\"type\":\"http\"},\"ServiceAccount\":{\"description\":\"Service Account\",\"scheme\":\"basic\",\"type\":\"http\"}},\"securitySource\":\"definition\"}"
+            source: "openapi3"
+            version: 1
+          }
+          method: "POST"
+          orig: "/projects/{projectId}/annotations"
+          rename: {
+            param: {
+              projectId: "project_id"
+            }
+          }
+          segments: [
+            {
+              lit: "projects"
+            }
+            {
+              var: "project_id"
+            }
+            {
+              lit: "annotations"
+            }
+          ]
+          select: {
+            exist: [
+              "project_id"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.results`"
+          }
+        }
+      ]
+    }
+    load: {
+      name: "load"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "id"
+                orig: "annotation_id"
+                reqd: true
+                type: "`$NUMBER`"
+              }
+              {
+                kind: "param"
+                name: "project_id"
+                orig: "project_id"
+                reqd: true
+                type: "`$INTEGER`"
+              }
+            ]
+          }
+          contract: {
+            id: "GET /projects/{projectId}/annotations/{annotationId}"
+            json: "{\"operationId\":\"get-annotation\",\"parameters\":[{\"description\":\"Your project id (eg: 12345)\",\"in\":\"path\",\"name\":\"projectId\",\"required\":true,\"schema\":{\"type\":\"integer\"}},{\"description\":\"The id of the annotation\",\"in\":\"path\",\"name\":\"annotationId\",\"required\":true,\"schema\":{\"type\":\"number\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":false,\"description\":\"A JSON response object containing an annotation'\",\"properties\":{\"results\":{\"additionalProperties\":false,\"description\":\"Representation of a single annotation\",\"properties\":{\"date\":{\"description\":\"A string representation of a date in \\\"YYYY-MM-DD HH:mm:ss\\\" format\",\"example\":\"2022-02-15 12:00:00\",\"type\":\"string\"},\"description\":{\"description\":\"The text that will be shown when looking at the annotation\",\"example\":\"Something interesting happened!\",\"type\":\"string\"},\"id\":{\"type\":\"number\"},\"tags\":{\"items\":{\"description\":\"Basic info about an Annotation Tag\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\"}},\"title\":\"SimpleTag\",\"type\":\"object\"},\"type\":\"array\"},\"user\":{\"description\":\"Info about the creator of the annotation\",\"properties\":{\"first_name\":{\"example\":\"John\",\"type\":\"string\"},\"id\":{\"type\":\"number\"},\"last_name\":{\"example\":\"Smith\",\"type\":\"string\"}},\"title\":\"UserInfo\",\"type\":\"object\"}},\"title\":\"AnnotationsEntry\",\"type\":\"object\"},\"status\":{\"description\":\"The status of the response\",\"example\":\"ok\",\"type\":\"string\"}},\"required\":[\"status\",\"results\"],\"title\":\"GetAnnotationsResponse\",\"type\":\"object\"}}},\"description\":\"Success\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"Details about the error that occurred\",\"type\":\"string\"},\"status\":{\"enum\":[\"error\"],\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized\"},\"403\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"Details about the error that occurred\",\"type\":\"string\"},\"status\":{\"enum\":[\"error\"],\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Forbidden\"}},\"security\":[{\"ServiceAccount\":[]}],\"securitySchemes\":{\"OAuthToken\":{\"description\":\"OAuth Token\",\"scheme\":\"bearer\",\"type\":\"http\"},\"ProjectSecret\":{\"description\":\"Project Secret\",\"scheme\":\"basic\",\"type\":\"http\"},\"ServiceAccount\":{\"description\":\"Service Account\",\"scheme\":\"basic\",\"type\":\"http\"}},\"securitySource\":\"definition\"}"
+            source: "openapi3"
+            version: 1
+          }
+          method: "GET"
+          orig: "/projects/{projectId}/annotations/{annotationId}"
+          rename: {
+            param: {
+              annotationId: "id"
+              projectId: "project_id"
+            }
+          }
+          segments: [
+            {
+              lit: "projects"
+            }
+            {
+              var: "project_id"
+            }
+            {
+              lit: "annotations"
+            }
+            {
+              var: "id"
+            }
+          ]
+          select: {
+            exist: [
+              "id"
+              "project_id"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.results`"
+          }
+        }
+      ]
+    }
+    remove: {
+      name: "remove"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "id"
+                orig: "annotation_id"
+                reqd: true
+                type: "`$NUMBER`"
+              }
+              {
+                kind: "param"
+                name: "project_id"
+                orig: "project_id"
+                reqd: true
+                type: "`$INTEGER`"
+              }
+            ]
+          }
+          contract: {
+            id: "DELETE /projects/{projectId}/annotations/{annotationId}"
+            json: "{\"operationId\":\"delete-annotation\",\"parameters\":[{\"description\":\"Your project id (eg: 12345)\",\"in\":\"path\",\"name\":\"projectId\",\"required\":true,\"schema\":{\"type\":\"integer\"}},{\"description\":\"The id of the annotation\",\"in\":\"path\",\"name\":\"annotationId\",\"required\":true,\"schema\":{\"type\":\"number\"}}],\"protocol\":\"http\",\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":false,\"description\":\"A JSON response object containing the id of the deleted annotation'\",\"properties\":{\"results\":{\"properties\":{\"id\":{\"description\":\"The id of the deleted annotation\",\"type\":\"number\"}},\"type\":\"object\"},\"status\":{\"description\":\"The status of the response\",\"example\":\"ok\",\"type\":\"string\"}},\"required\":[\"status\",\"results\"],\"title\":\"DeleteAnnotationsResponse\",\"type\":\"object\"}}},\"description\":\"Success\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"Details about the error that occurred\",\"type\":\"string\"},\"status\":{\"enum\":[\"error\"],\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized\"},\"403\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"Details about the error that occurred\",\"type\":\"string\"},\"status\":{\"enum\":[\"error\"],\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Forbidden\"}},\"security\":[{\"ServiceAccount\":[]}],\"securitySchemes\":{\"OAuthToken\":{\"description\":\"OAuth Token\",\"scheme\":\"bearer\",\"type\":\"http\"},\"ProjectSecret\":{\"description\":\"Project Secret\",\"scheme\":\"basic\",\"type\":\"http\"},\"ServiceAccount\":{\"description\":\"Service Account\",\"scheme\":\"basic\",\"type\":\"http\"}},\"securitySource\":\"definition\"}"
+            source: "openapi3"
+            version: 1
+          }
+          method: "DELETE"
+          orig: "/projects/{projectId}/annotations/{annotationId}"
+          rename: {
+            param: {
+              annotationId: "id"
+              projectId: "project_id"
+            }
+          }
+          segments: [
+            {
+              lit: "projects"
+            }
+            {
+              var: "project_id"
+            }
+            {
+              lit: "annotations"
+            }
+            {
+              var: "id"
+            }
+          ]
+          select: {
+            exist: [
+              "id"
+              "project_id"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.results`"
+          }
+        }
+      ]
+    }
+    update: {
+      name: "update"
+      points: [
+        {
+          args: {
+            params: [
+              {
+                kind: "param"
+                name: "id"
+                orig: "annotation_id"
+                reqd: true
+                type: "`$NUMBER`"
+              }
+              {
+                kind: "param"
+                name: "project_id"
+                orig: "project_id"
+                reqd: true
+                type: "`$INTEGER`"
+              }
+            ]
+          }
+          contract: {
+            id: "PATCH /projects/{projectId}/annotations/{annotationId}"
+            json: "{\"operationId\":\"patch-annotation\",\"parameters\":[{\"description\":\"Your project id (eg: 12345)\",\"in\":\"path\",\"name\":\"projectId\",\"required\":true,\"schema\":{\"type\":\"integer\"}},{\"description\":\"The id of the annotation\",\"in\":\"path\",\"name\":\"annotationId\",\"required\":true,\"schema\":{\"type\":\"number\"}}],\"protocol\":\"http\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"description\":{\"description\":\"The text that will be shown when looking at the annotation\",\"example\":\"Something interesting happened!\",\"type\":\"string\"},\"tags\":{\"description\":\"The ids of the tags to be added to the annotation\",\"items\":{\"type\":\"number\"},\"title\":\"TagIds\",\"type\":\"array\"}}}}},\"required\":true},\"responses\":{\"200\":{\"content\":{\"application/json\":{\"schema\":{\"additionalProperties\":false,\"description\":\"A JSON response object containing an annotation'\",\"properties\":{\"results\":{\"additionalProperties\":false,\"description\":\"Representation of a single annotation\",\"properties\":{\"date\":{\"description\":\"A string representation of a date in \\\"YYYY-MM-DD HH:mm:ss\\\" format\",\"example\":\"2022-02-15 12:00:00\",\"type\":\"string\"},\"description\":{\"description\":\"The text that will be shown when looking at the annotation\",\"example\":\"Something interesting happened!\",\"type\":\"string\"},\"id\":{\"type\":\"number\"},\"tags\":{\"items\":{\"description\":\"Basic info about an Annotation Tag\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\"}},\"title\":\"SimpleTag\",\"type\":\"object\"},\"type\":\"array\"},\"user\":{\"description\":\"Info about the creator of the annotation\",\"properties\":{\"first_name\":{\"example\":\"John\",\"type\":\"string\"},\"id\":{\"type\":\"number\"},\"last_name\":{\"example\":\"Smith\",\"type\":\"string\"}},\"title\":\"UserInfo\",\"type\":\"object\"}},\"title\":\"AnnotationsEntry\",\"type\":\"object\"},\"status\":{\"description\":\"The status of the response\",\"example\":\"ok\",\"type\":\"string\"}},\"required\":[\"status\",\"results\"],\"title\":\"GetAnnotationsResponse\",\"type\":\"object\"}}},\"description\":\"Success\"},\"401\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"Details about the error that occurred\",\"type\":\"string\"},\"status\":{\"enum\":[\"error\"],\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Unauthorized\"},\"403\":{\"content\":{\"application/json\":{\"schema\":{\"properties\":{\"error\":{\"description\":\"Details about the error that occurred\",\"type\":\"string\"},\"status\":{\"enum\":[\"error\"],\"type\":\"string\"}},\"type\":\"object\"}}},\"description\":\"Forbidden\"}},\"security\":[{\"ServiceAccount\":[]}],\"securitySchemes\":{\"OAuthToken\":{\"description\":\"OAuth Token\",\"scheme\":\"bearer\",\"type\":\"http\"},\"ProjectSecret\":{\"description\":\"Project Secret\",\"scheme\":\"basic\",\"type\":\"http\"},\"ServiceAccount\":{\"description\":\"Service Account\",\"scheme\":\"basic\",\"type\":\"http\"}},\"securitySource\":\"definition\"}"
+            source: "openapi3"
+            version: 1
+          }
+          method: "PATCH"
+          orig: "/projects/{projectId}/annotations/{annotationId}"
+          rename: {
+            param: {
+              annotationId: "id"
+              projectId: "project_id"
+            }
+          }
+          segments: [
+            {
+              lit: "projects"
+            }
+            {
+              var: "project_id"
+            }
+            {
+              lit: "annotations"
+            }
+            {
+              var: "id"
+            }
+          ]
+          select: {
+            exist: [
+              "id"
+              "project_id"
+            ]
+          }
+          transform: {
+            req: "`reqdata`"
+            res: "`body.results`"
+          }
+        }
+      ]
+    }
+  }
+
+  relations: {
+    ancestors: [
+      [
+        "project"
+      ]
+    ]
+  }
+
+
+
+}

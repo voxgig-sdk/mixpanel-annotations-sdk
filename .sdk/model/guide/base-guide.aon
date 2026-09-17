@@ -1,0 +1,55 @@
+# Guide
+
+guide: {
+  metrics: count: entity: 5
+  metrics: count: path: 3
+  metrics: count: method: 7
+
+  entity: annotation: {
+    path: "/projects/{projectId}/annotations": {
+      rename: param: "projectId": *"project_id"
+      op: create: method: *POST
+      op: create: transform: res: *("`body.results`")|top
+    }
+    path: "/projects/{projectId}/annotations/{annotationId}": {
+      rename: param: "annotationId": *"id"
+      rename: param: "projectId": *"project_id"
+      op: load: method: *GET
+      op: load: transform: res: *("`body.results`")|top
+      op: patch: method: *PATCH
+      op: patch: transform: res: *("`body.results`")|top
+      op: remove: method: *DELETE
+      op: remove: transform: res: *("`body.results`")|top
+    }
+  }
+
+  entity: annotation_tag: {
+    path: "/projects/{projectId}/annotations/tags": {
+      rename: param: "projectId": *"project_id"
+      op: list: method: *GET
+    }
+  }
+
+  entity: list_annotation: {
+    path: "/projects/{projectId}/annotations": {
+      rename: param: "projectId": *"project_id"
+      op: list: method: *GET
+      op: list: transform: res: *("`body.results`")|top
+    }
+  }
+
+  entity: project: {
+    path: "/projects/{projectId}/annotations": {
+      action: "annotation": {}
+      rename: param: "projectId": *"id"
+    }
+  }
+
+  entity: tag: {
+    path: "/projects/{projectId}/annotations/tags": {
+      rename: param: "projectId": *"project_id"
+      op: create: method: *POST
+    }
+  }
+
+}

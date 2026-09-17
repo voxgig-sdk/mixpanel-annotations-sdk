@@ -1,0 +1,229 @@
+{
+  "existing": {
+    "list_annotation": {
+      "LIST_ANNOTATION00": {
+        "date": "s32",
+        "description": "s33",
+        "id": "LIST_ANNOTATION00",
+        "tags": [],
+        "user": {},
+        "project_id": "PROJECT01"
+      },
+      "LIST_ANNOTATION01": {
+        "date": "s64",
+        "description": "s65",
+        "id": "LIST_ANNOTATION01",
+        "tags": [],
+        "user": {},
+        "project_id": "PROJECT01"
+      },
+      "LIST_ANNOTATION02": {
+        "date": "s96",
+        "description": "s97",
+        "id": "LIST_ANNOTATION02",
+        "tags": [],
+        "user": {},
+        "project_id": "PROJECT01"
+      }
+    }
+  },
+  "new": {
+    "list_annotation": {
+      "list_annotation_ref01": {
+        "date": "sc8",
+        "description": "sc9",
+        "tags": [],
+        "user": {}
+      }
+    }
+  },
+  "requests": {
+    "GET /projects/{projectId}/annotations": {
+      "provenance": "operation-contract",
+      "contract": {
+        "operationId": "list-all-annotations-for-project",
+        "parameters": [
+          {
+            "description": "Your project id (eg: 12345)",
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The date in yyyy-mm-dd format to begin querying from. This date is inclusive.",
+            "in": "query",
+            "name": "fromDate",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The date in yyyy-mm-dd format to query to. This date is inclusive.",
+            "in": "query",
+            "name": "toDate",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "protocol": "http",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "A JSON response object containing all annotations in the project'",
+                  "properties": {
+                    "results": {
+                      "items": {
+                        "additionalProperties": false,
+                        "description": "Representation of a single annotation",
+                        "properties": {
+                          "date": {
+                            "description": "A string representation of a date in \"YYYY-MM-DD HH:mm:ss\" format",
+                            "example": "2022-02-15 12:00:00",
+                            "type": "string"
+                          },
+                          "description": {
+                            "description": "The text that will be shown when looking at the annotation",
+                            "example": "Something interesting happened!",
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "number"
+                          },
+                          "tags": {
+                            "items": {
+                              "description": "Basic info about an Annotation Tag",
+                              "properties": {
+                                "id": {
+                                  "type": "number"
+                                },
+                                "name": {
+                                  "type": "string"
+                                }
+                              },
+                              "title": "SimpleTag",
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "user": {
+                            "description": "Info about the creator of the annotation",
+                            "properties": {
+                              "first_name": {
+                                "example": "John",
+                                "type": "string"
+                              },
+                              "id": {
+                                "type": "number"
+                              },
+                              "last_name": {
+                                "example": "Smith",
+                                "type": "string"
+                              }
+                            },
+                            "title": "UserInfo",
+                            "type": "object"
+                          }
+                        },
+                        "title": "AnnotationsEntry",
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "status": {
+                      "description": "The status of the response",
+                      "example": "ok",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "results"
+                  ],
+                  "title": "ListAnnotationsResponse",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "description": "Details about the error that occurred",
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "error"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "error": {
+                      "description": "Details about the error that occurred",
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "error"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "ServiceAccount": []
+          }
+        ],
+        "securitySchemes": {
+          "OAuthToken": {
+            "description": "OAuth Token",
+            "scheme": "bearer",
+            "type": "http"
+          },
+          "ProjectSecret": {
+            "description": "Project Secret",
+            "scheme": "basic",
+            "type": "http"
+          },
+          "ServiceAccount": {
+            "description": "Service Account",
+            "scheme": "basic",
+            "type": "http"
+          }
+        },
+        "securitySource": "definition"
+      }
+    }
+  }
+}
